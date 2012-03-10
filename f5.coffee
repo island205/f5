@@ -41,11 +41,12 @@ createServer=->
                     res.setHeader "Expires",expires.toUTCString()
                     res.setHeader "Cache-control","max-age=#{config.Expires.maxAge}"
                         
-                ifModifiedSince="If-Modified-Since".toLowerCase()
+                
+				ifModifiedSince="If-Modified-Since".toLowerCase()
                 if req.headers[ifModifiedSince] && (lastModified is req.headers[ifModifiedSince])
                     res.writeHead 304,"Not Modified"
                     res.end()
-                else    
+                else
                     fs.readFile realPath,"binary",(err,file)->
                         if err
                             res.writeHead 500,{"content-Type":"text/plain"}
