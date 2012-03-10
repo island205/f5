@@ -5,7 +5,7 @@ fs=require "fs"
 path=require "path"
 {types}=require "./mime"
 config=require "./config"
-watcher=require("watch-tree-maintained").watchTree ".",{"ignore":/\.swp$/}
+watcher=require("watch-tree-maintained").watchTree ".",{"ignore":"~$|\\.swp$"}
 
 SOCKET_TEMPLATE="""
 	<script src="/socket.io/socket.io.js"></script>
@@ -22,6 +22,22 @@ insertSocket=(file)->
 		file+=SOCKET_TEMPLATE
 	else
 		file
+res500=(err,res)->
+	res.writeHead 500,{"Content-Type":"text/plain"}
+	res.end err
+rendDir=(realPath,files)->
+	if realPath[realPath.length-1] isnt "/"
+		realPath+="/"
+	html=[]
+	html.push "<ul>"
+	#html.push "<li><a href='#{realPath}'>#{realPath}</a></li>"
+	for file in files
+		if fs.statSync(realPath+file).isDirectory()
+			html.push "<li><a href='./#{file}/'>#{file}</a></li>"
+		else
+			html.push "<li><a href='./#{file}'>#{file}</a></li>"
+	html.push "</ul>"
+	html.join ""
 createServer=->
 	server=http.createServer (req,res)->
 		pathname=url.parse(req.url).pathname
@@ -36,8 +52,13 @@ createServer=->
 				res.write "404 Not Found"
 				res.end()
 			else if fs.statSync(realPath).isDirectory()
-				res.writeHead 200,{"Content-Type":"text/plain"}
-				res.end("It is a directory.")
+				fs.readdir realPath,(err,files)->
+					if err
+						res500 err,res
+					else
+						res.writeHead 200,{"Content-Type":types["html"]}
+						res.write rendDir realPath,files
+						res.end()
 			else
 				ext=path.extname realPath
 				if ext
@@ -48,8 +69,7 @@ createServer=->
 			
 				fs.readFile realPath,"binary",(err,file)->
 					if err
-						res.writeHead 500,{"Content-Type":"text/plain"}
-						res.end err
+						res500 err,res
 					else
 						res.writeHead 200,"Ok"
 						if ext is "html"
