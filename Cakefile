@@ -6,3 +6,13 @@ task "watch","watch file change and compile to js",->
 			throw new Error "Error while compiling .coffee to .js"
 	child.stdout.on "data",(data)->
 		console.log data
+
+task "install","install f5 local",->
+	child=exec "sudo npm install -g",(err,s)->
+		if err
+			console.log err
+		else
+			console.log s
+	child.stdout.on "data",(data)->
+		console.log data
+	

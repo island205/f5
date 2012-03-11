@@ -30,7 +30,8 @@ rendDir=(realPath,files)->
 		realPath+="/"
 	html=[]
 	html.push "<ul>"
-	#html.push "<li><a href='#{realPath}'>#{realPath}</a></li>"
+	if realPath isnt "./"
+		html.push "<li><a href='../'>..</a></li>"
 	for file in files
 		if fs.statSync(realPath+file).isDirectory()
 			html.push "<li><a href='./#{file}/'>#{file}</a></li>"
@@ -38,10 +39,10 @@ rendDir=(realPath,files)->
 			html.push "<li><a href='./#{file}'>#{file}</a></li>"
 	html.push "</ul>"
 	html.join ""
-createServer=->
+createServer=(_path=".")->
 	server=http.createServer (req,res)->
 		pathname=url.parse(req.url).pathname
-		realPath="."+pathname
+		realPath=_path+pathname
 		
 		###
 		path exist
@@ -57,7 +58,7 @@ createServer=->
 						res500 err,res
 					else
 						res.writeHead 200,{"Content-Type":types["html"]}
-						res.write rendDir realPath,files
+						res.write insertSocket rendDir realPath,files
 						res.end()
 			else
 				ext=path.extname realPath
@@ -82,10 +83,10 @@ createServer=->
 		_sockets.push socket
 	for change in ["fileCreated","fileModified","fileDeleted"]
 		watcher.on change,->
-			console.log "change"
 			for socket in _sockets
 				socket.emit "reload"
 	server.listen 8888
 	console.log "Your static is starting on port 8888 !"
 
+exports.version="v0.0.1"
 exports.createServer=createServer
