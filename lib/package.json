@@ -1,0 +1,17 @@
+{
+  "author": "ZhiCun <island205@gmail.com> (islan205.com)",
+  "name": "f5",
+  "description": "a static which can reload client page when there is file change in server.",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/island205/f5.git"
+  },
+  "main":"f5",
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
