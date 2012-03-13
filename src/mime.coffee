@@ -17,4 +17,5 @@ exports.types =
   wma: "audio/x-ms-wma"
   wmv: "video/x-ms-wmv"
   xml: "text/xml"
+  htm:"text/html"
 

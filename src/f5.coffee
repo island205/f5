@@ -4,7 +4,6 @@ url=require "url"
 fs=require "fs"
 path=require "path"
 {types}=require "./mime"
-config=require "./config"
 watcher=require("watch-tree-maintained").watchTree ".",{"ignore":"~$|\\.swp$"}
 
 SOCKET_TEMPLATE="""
@@ -73,7 +72,7 @@ createServer=(_path=".")->
 						res500 err,res
 					else
 						res.writeHead 200,"Ok"
-						if ext is "html"
+						if ext is "html" or ext is "htm"
 							file=insertSocket file
 						res.write file,"binary"
 						res.end()
