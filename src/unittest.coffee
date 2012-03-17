@@ -1,8 +1,21 @@
 fs=require "fs"
+mustache=require "mustache"
 path=require "path"
 {templates}=require "./template"
-console.log templates
 TEST_FOLDER_NAME="test"
+
+templatePath="./template/"
+
+getTemplate=(name,type,data={})->
+	if name is "qunit"
+		file="#{name}-template-test.#{type}"
+	else
+		file="#{name}-template-spec.#{type}"
+	filePath=templatePath+file
+	file=fs.readFileSync(filePath,"utf-8")
+	file=mustache.to_html file,data
+	file
+	
 
 generateFolder=(name)->
 	if not path.existsSync "./#{name}"
@@ -32,5 +45,6 @@ generate=(fileName)->
 		fs.writeFileSync htmlFilePath,html
 		console.log  " #{htmlFilePath} is genrated."
 
+exports.getTemplate=getTemplate
 exports.generateAll=generateAll
 exports.generate=generate

@@ -15,4 +15,10 @@ task "install","install f5 local",->
 			console.log s
 	child.stdout.on "data",(data)->
 		console.log data
-	
+
+task "test","run test",->
+	exec "nodeunit test/*-test.coffee",(err,s)->
+		if err
+			console.log err
+		else
+			console.log s
