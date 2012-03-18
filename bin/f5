@@ -4,7 +4,33 @@ var f5=require("../"),
 	program=require("commander");
 
 program
-	.version("0.0.1")
-	.parse(process.argv);
-var path=program.args.shift() || ".";
-f5.createServer(path);
+	.version("0.0.1");
+
+
+program
+	.command("qunit [env]")
+	.description("test with qunit")
+	.action(function(env,options){
+		env=env || "."
+		console.log(env);
+		process.exit();
+	});
+
+
+program
+	.command("run")
+	.action(function(){
+		var path=".";
+		f5.createServer(path);
+	});
+
+program.parse(process.argv);
+
+
+
+
+
+
+
+
+
