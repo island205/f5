@@ -17,9 +17,11 @@ SOCKET_TEMPLATE="""
 
 """
 insertSocket=(file)->
-	if file.indexOf("</body>") is -1
+	index=file.indexOf "</body>"
+	if index is -1
 		file+=SOCKET_TEMPLATE
 	else
+		file=file.slice(0,index)+SOCKET_TEMPLATE+file.slice(index)
 		file
 res500=(err,res)->
 	res.writeHead 500,{"Content-Type":"text/plain"}
