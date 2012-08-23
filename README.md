@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/island205/f5.png)](http://travis-ci.org/island205/f5)
  light static sever which will reload page when there are changes in server side!
  
 #install
