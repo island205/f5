@@ -4,7 +4,7 @@ url=require "url"
 fs=require "fs"
 path=require "path"
 {types}=require "./mime"
-watcher=require("watch-tree-maintained").watchTree ".",{"ignore":"~$|\\.swp$"}
+watcher=require("watch-tree-maintained").watchTree ".",{"ignore":"^\..*|~$|\\.swp$"}
 
 SOCKET_TEMPLATE="""
 	<script src="/socket.io/socket.io.js"></script>
@@ -14,19 +14,20 @@ SOCKET_TEMPLATE="""
 			window.location.reload();
 		});
 	</script>	
-
 """
+
 insertSocket=(file)->
 	index=file.indexOf "</body>"
 	if index is -1
 		file+=SOCKET_TEMPLATE
 	else
 		file=file.slice(0,index)+SOCKET_TEMPLATE+file.slice(index)
-		file
+
 res500=(err,res)->
 	res.writeHead 500,{"Content-Type":"text/plain"}
 	res.end err
-rendDir=(realPath,files)->
+
+renderDir=(realPath,files)->
 	if realPath[realPath.length-1] isnt "/"
 		realPath+="/"
 	html=[]
@@ -40,6 +41,7 @@ rendDir=(realPath,files)->
 			html.push "<li><a href='./#{file}'>#{file}</a></li>"
 	html.push "</ul>"
 	html.join ""
+
 createServer=(_path=".")->
 	server=http.createServer (req,res)->
 		pathname=url.parse(req.url).pathname
@@ -59,7 +61,7 @@ createServer=(_path=".")->
 						res500 err,res
 					else
 						res.writeHead 200,{"Content-Type":types["html"]}
-						res.write insertSocket rendDir realPath,files
+						res.write insertSocket renderDir realPath,files
 						res.end()
 			else
 				ext=path.extname realPath
@@ -86,8 +88,8 @@ createServer=(_path=".")->
 		watcher.on change,->
 			for socket in _sockets
 				socket.emit "reload"
-	server.listen 8888
-	console.log "Your static is starting on port 8888 !"
+	server.listen 3000
+	console.log "Your static is starting on port 3000 !"
 
 exports.version="v0.0.1"
 exports.createServer=createServer

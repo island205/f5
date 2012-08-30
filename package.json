@@ -10,7 +10,6 @@
   "main": "index",
   "bin":{"f5":"./bin/f5"},
   "dependencies": {
-    "commander":"0.5.2",
     "watch-tree-maintained":"0.1.2",
     "socket.io":"0.9.1-1"
   },
