@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
 var f5=require("../lib/f5.js"),
-    path=".";
-f5.createServer(path);
+    path = ".",
+    port = 3000;
+
+port = parseInt(process.argv[process.argv.length - 1]) || port;
+
+f5.createServer({
+	path:path,
+	port:port
+});
 
 
 

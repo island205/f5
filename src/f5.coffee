@@ -42,7 +42,9 @@ renderDir=(realPath,files)->
 	html.push "</ul>"
 	html.join ""
 
-createServer=(_path=".")->
+createServer=(config)->
+	_path = config.path
+	_port = config.port
 	server=http.createServer (req,res)->
 		pathname=url.parse(req.url).pathname
 		realPath=_path+pathname
@@ -50,7 +52,7 @@ createServer=(_path=".")->
 		###
 		path exist
 		###
-		path.exists realPath,(exists)->
+		fs.exists realPath,(exists)->
 			if not exists
 				res.writeHead 404,{"Content-Type":"text/plain"}
 				res.write "404 Not Found"
@@ -88,8 +90,8 @@ createServer=(_path=".")->
 		watcher.on change,->
 			for socket in _sockets
 				socket.emit "reload"
-	server.listen 3000
-	console.log "Your static is starting on port 3000 !"
+	server.listen _port
+	console.log "GOTO localhost:#{_port}!"
 
-exports.version="v0.0.1"
+exports.version="v0.0.2"
 exports.createServer=createServer

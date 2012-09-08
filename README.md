@@ -6,5 +6,7 @@
 #how to use ?
 in the path which you want to be serve:
     
-    //run command
-    >f5
+    #run command
+    f5
+    #or assign port
+    f5 8080
