@@ -48,7 +48,7 @@ createServer=(config)->
 	server=http.createServer (req,res)->
 		pathname = url.parse(req.url).pathname
 		realPath = _path+pathname
-		###support chinese filename or path
+		#support chinese filename or path
 		realPath = decodeURIComponent realPath
 		
 		###
