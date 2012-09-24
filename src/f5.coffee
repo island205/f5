@@ -85,8 +85,7 @@ createServer=(config)->
 						res.write file,"binary"
 						res.end()
     _sockets=[]
-    _io={sockets}=io.listen server
-    _io.set "log level", 0
+    _io={sockets}=io.listen server, "log level":0
     sockets.on "connection",(socket)->
         _sockets.push socket
 	for change in ["fileCreated","fileModified","fileDeleted"]
