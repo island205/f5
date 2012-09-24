@@ -7,13 +7,13 @@ path=require "path"
 watcher=require("watch-tree-maintained").watchTree ".",{"ignore":"^\..*|~$|\\.swp$"}
 
 SOCKET_TEMPLATE="""
-	<script src="/socket.io/socket.io.js"></script>
-	<script>
-		var socket = io.connect('http://localhost');
-		socket.on('reload', function (data) {
-			window.location.reload();
-		});
-	</script>	
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost');
+        socket.on('reload', function (data) {
+            window.location.reload();
+        });
+</script>
 """
 
 insertSocket=(file)->
@@ -84,16 +84,17 @@ createServer=(config)->
 							file=insertSocket file
 						res.write file,"binary"
 						res.end()
-	_sockets=[]
-	{sockets}=io.listen server
-	sockets.on "connection",(socket)->
-		_sockets.push socket
+    _sockets=[]
+    _io={sockets}=io.listen server
+    _io.set "log level", 0
+    sockets.on "connection",(socket)->
+        _sockets.push socket
 	for change in ["fileCreated","fileModified","fileDeleted"]
 		watcher.on change,->
 			for socket in _sockets
 				socket.emit "reload"
 	server.listen _port
-	console.log "GOTO localhost:#{_port}!"
+	console.log "f5 is on localhost:#{_port} now."
 
 exports.version="v0.0.2"
 exports.createServer=createServer
