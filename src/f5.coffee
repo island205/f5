@@ -32,9 +32,9 @@ STYLE_TEMPLATE=\
 insertSocket=(file)->
 	index=file.indexOf "</body>"
 	if index is -1
-		file+=SOCKET_TEMPLATE
+		file += SOCKET_TEMPLATE
 	else
-		file=file.slice(0,index)+SOCKET_TEMPLATE+file.slice(index)
+		file = file[ 0...index ] + SOCKET_TEMPLATE  + file[ index... ]
 
 res500=(err,res)->
 	res.writeHead 500,{"Content-Type":"text/plain"}
