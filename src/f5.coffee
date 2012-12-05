@@ -89,7 +89,7 @@ renderDir=(realPath,files)->
 				when 'rar','zip','7z' then filetype = 'zipfile'
 				else filetype = 'defaulttype'
 
-			html.push "<li><span class='file'></span><a href='./#{file}'>#{file}</a></li>"
+			html.push "<li><span class='file ft_#{filetype}'></span><a href='./#{file}'>#{file}</a></li>"
 	html.push "</ul>"
 	html.join ""
 
