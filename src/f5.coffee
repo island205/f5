@@ -26,25 +26,28 @@ STYLE_TEMPLATE=\
 	ul li span{background-image:url(http://pic.yupoo.com/island205/CjJzay6Y/BaDLi.png); display:inline-block; width:20px; height:14px; margin:0 3px}
 	ul li .folder{}
 	ul li .file{ background-position-y:18px;}
-	.subdir ul{display: none;box-shadow:0 0 5px #ccc inset;}
+	.subdir ul{box-shadow:0 0 5px #ccc inset;background: #fff;}
+	.folded ul{display: none;}
+	.unfold ul{display:block;}
 </style>
 	<script language='javascript'>
 var subdirs = document.getElementsByClassName('subdir');
 var l = subdirs.length;
 for(var i = 0;i < l;i ++) {
 	(function(index){
-		subdirs[i].addEventListener('click',function(){
-			var folder = this.getElementsByTagName("ul")[0];
-			if(folder.style.display == 'none' || !folder.style.getPropertyValue('display')) {
-			folder.style.display = 'block';
-			return;
+		subdirs[i].addEventListener('click',function(){		// toggle className
+			cn = this.className;
+			console.log(cn);
+			if( /\\bfolded\\b/.test( cn ) ) {				// if folded
+				this.className = cn.replace(/\\bfolded\\b/,'');
+				this.className += " unfold";
+			}else{
+				this.className = cn.replace(/\\bunfold\\b/g,''); 	// if unfold
+				this.className += " folded";
 			}
-			if(folder.style.display == 'block') {
-				folder.style.display = 'none';
-				return;
-			}
+			this.className = this.className.replace("  "," ")
 		})
-	})(i)
+	})( i )
 }
 	</script>
 """
