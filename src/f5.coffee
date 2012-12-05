@@ -85,9 +85,10 @@ renderDir=(realPath,files)->
 				when 'css' 	then filetype = 'css'
 				when 'html','htm' then filetype = 'html'
 				when 'js'	then filetype = 'javascript'
-				when 'jpg', 'jpeg','psd','gif','png' filetype = 'image'
-				when 'rar','zip','7z' filetype = 'zipfile'
+				when 'jpg','jpeg','psd','gif','png' then filetype = 'image'
+				when 'rar','zip','7z' then filetype = 'zipfile'
 				else filetype = 'defaulttype'
+
 			html.push "<li><span class='file'></span><a href='./#{file}'>#{file}</a></li>"
 	html.push "</ul>"
 	html.join ""
