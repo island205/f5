@@ -1,10 +1,10 @@
-http=require "http"
-io=require "socket.io"
-url=require "url"
-fs=require "fs"
-path=require "path"
-{types}=require "./mime"
-watcher=require("watch-tree-maintained").watchTree ".",{"ignore":"^\..*|~$|\\.swp$"}
+http    = require "http"
+io      = require "socket.io"
+url     = require "url"
+fs      = require "fs"
+path    = require "path"
+{types} = require "./mime"
+watcher = require("watch-tree-maintained").watchTree ".",{"ignore":"^\..*|~$|\\.swp$"}
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
