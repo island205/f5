@@ -15,7 +15,7 @@ SOCKET_TEMPLATE="""
         });
 </script>
 """
-STYLE_TEMPLATE='''
+STYLE_TEMPLATE="""
 <style type="text/css">
     ul{padding:5px 8px; background:#F8F8F8; margin:5px; border: 1px solid #CACACA; border-radius:3px; box-shadow:0 0 5px #ccc;}
     ul li{list-style-type:none; border-bottom:1px solid #eee; padding:3px;}
@@ -25,7 +25,7 @@ STYLE_TEMPLATE='''
     ul li .folder{}
     ul li .file{ background-position-y:18px;}
 </style>
-'''
+"""
 
 insertSocket=(file)->
 	index=file.indexOf "</body>"
