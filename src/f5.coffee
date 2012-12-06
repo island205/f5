@@ -141,7 +141,7 @@ createServer=(config)->
                         res.write file,"binary"
                         res.end()
     _sockets=[]
-    _io = io.listen server, "log level":3
+    _io = io.listen server, "log level":0
     _io.sockets.on "connection",(socket)->
         _sockets.push socket
         socket.emit "conn"
