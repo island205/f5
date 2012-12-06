@@ -4,7 +4,7 @@ url     = require "url"
 fs      = require "fs"
 path    = require "path"
 {types} = require "./mime"
-watcher = require("watch-tree-maintained").watchTree ".",{"ignore":"^\..*|~$|\\.swp$"}
+watcher = require("watch-tree-maintained").watchTree "."
 
 SOCKET_TEMPLATE=\
 """
@@ -14,13 +14,16 @@ SOCKET_TEMPLATE=\
         socket.on('reload', function (data) {
             window.location.reload();
         });
+        socket.on("conn", function(data){
+            console.log("conn");
+        });
 </script>
 """
 STYLE_TEMPLATE=\
 """
 <style type="text/css">
-	ul{padding:5px 8px; background:#F8F8F8; margin:5px; border: 1px solid #CACACA; border-radius:3px; box-shadow:0 0 5px #ccc;}
-	ul li{list-style-type:none; border-bottom:1px solid #eee; padding:3px;}
+    ul{padding:5px 8px; background:#F8F8F8; margin:5px; border: 1px solid #CACACA; border-radius:3px; box-shadow:0 0 5px #ccc;}
+    ul li{list-style-type:none; border-bottom:1px solid #eee; padding:3px;}
 	ul li a{color:#4183C4; text-decoration:none}
 	ul li a:hover{text-decoration:underline}
 	ul li span{background-image:url(http://pic.yupoo.com/island205/CjJzay6Y/BaDLi.png); display:inline-block; width:20px; height:14px; margin:0 3px}
@@ -49,7 +52,7 @@ for(var i = 0;i < l;i ++) {
 		})
 	})( i )
 }
-	</script>
+</script>
 """
 
 insertTempl = (file, templ)->
@@ -83,7 +86,7 @@ renderDir=(realPath,files)->
 		else
 			_split = file.split('.')
 			_extname = _split[_split.length-1]
-			filetype=''
+			filetype= ''
 			switch _extname
 				when 'css' 	then filetype = 'css'
 				when 'html','htm' then filetype = 'html'
@@ -97,58 +100,59 @@ renderDir=(realPath,files)->
 	html.join ""
 
 createServer=(config)->
-	_path = config.path
-	_port = config.port
-	server=http.createServer (req,res)->
-		pathname = url.parse(req.url).pathname
-		realPath = _path+pathname
+    _path = config.path
+    _port = config.port
+    server=http.createServer (req,res, next)->
+        pathname = url.parse(req.url).pathname
+        if pathname is '/socket.io/socket.io.js'
+            return next()
+        realPath = _path+pathname
 		#support chinese filename or path
-		realPath = decodeURIComponent realPath
-
-		###
-		path exist
-		###
-		fs.exists realPath,(exists)->
-			if not exists
-				res.writeHead 404,{"Content-Type":"text/plain"}
-				res.write "404 Not Found"
-				res.end()
-			else if fs.statSync(realPath).isDirectory()
-				fs.readdir realPath,(err,files)->
-					if err
-						res500 err,res
-					else
-						res.writeHead 200,{"Content-Type":types["html"]}
-						_htmltext = renderDir realPath,files
-						res.write insertTempl _htmltext, [STYLE_TEMPLATE,SOCKET_TEMPLATE]
-						res.end()
-			else
-				ext=path.extname realPath
-				if ext
-					ext=ext.slice 1
-				else
-					ext="unknown"
-				res.setHeader "Content-Type",types[ext] or "text/plian"
-
-				fs.readFile realPath,"binary",(err,file)->
-					if err
-						res500 err,res
-					else
-						res.writeHead 200,"Ok"
-						if ext is "html" or ext is "htm"
-							file=insertSocket file
-						res.write file,"binary"
-						res.end()
+        realPath = decodeURIComponent realPath
+        #path exist
+        fs.exists realPath,(exists)->
+            if not exists
+                res.writeHead 404,{"Content-Type":"text/plain"}
+                res.write "404 Not Found"
+                res.end()
+            else if fs.statSync(realPath).isDirectory()
+                fs.readdir realPath,(err,files)->
+                    if err
+                        res500 err,res
+                    else
+                        res.writeHead 200,{"Content-Type":types["html"]}
+                        _htmltext = renderDir realPath,files
+                        res.write insertTempl _htmltext, [STYLE_TEMPLATE,SOCKET_TEMPLATE]
+                        res.end()
+            else
+                ext=path.extname realPath
+                if ext
+                    ext=ext.slice 1
+                else
+                    ext="unknown"
+                res.setHeader "Content-Type",types[ext] or "text/plian"
+                fs.readFile realPath,"binary",(err,file)->
+                    if err
+                        res500 err,res
+                    else
+                        res.writeHead 200,"Ok"
+                        if ext is "html" or ext is "htm"
+                            file=insertSocket file
+                        res.write file,"binary"
+                        res.end()
     _sockets=[]
-    _io={sockets}=io.listen server, "log level":0
-    sockets.on "connection",(socket)->
+    _io = io.listen server, "log level":3
+    _io.sockets.on "connection",(socket)->
         _sockets.push socket
-	for change in ["fileCreated","fileModified","fileDeleted"]
-		watcher.on change,->
-			for socket in _sockets
-				socket.emit "reload"
-	server.listen _port
-	console.log "f5 is on localhost:#{_port} now."
-
+        socket.emit "conn"
+    for change in ["fileCreated","fileModified","fileDeleted"]
+        watcher.on change,->
+            debugger
+            for socket in _sockets
+                socket.emit "reload"
+    server.listen _port
+    console.log "f5 is on localhost:#{_port} now."
 exports.version="v0.0.3"
 exports.createServer=createServer
+
+
