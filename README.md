@@ -10,6 +10,15 @@ in the path which you want to be serve:
     f5
     #or assign port
     f5 8080
-**TODO**
-1. Different types of files should own different icons
+
+#Contributors
+
+- [UncleBill](https://github.com/UncleBill)
+- [node-migrator-bot](https://github.com/node-migrator-bot)
+
+#TODO
+
+1. Different types of files should own different icons  
 2. A browser extension for ``filelist`` display
+
+
