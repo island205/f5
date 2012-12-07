@@ -1,4 +1,4 @@
 *.swo
 *.swp
 *.js
-lib/*
+lib/*.js

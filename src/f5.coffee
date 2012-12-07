@@ -27,27 +27,18 @@ STYLE_TEMPLATE=\
 	ul li .folder{}
 	ul li .file{ background-position-y:18px;}
 	.subdir ul{box-shadow:0 0 5px #ccc inset;background: #fff;}
-	.folded ul{display: none;}
-	.unfold ul{display:block;}
+	.folded > ul{display: none;}
+	.unfold > ul{display:block;}
 </style>
 	<script language='javascript'>
-var subdirs = document.getElementsByClassName('subdir');
-var l = subdirs.length;
-for(var i = 0;i < l;i ++) {
-	(function(index){
-		subdirs[i].addEventListener('click',function(){		// toggle className
-			cn = this.className;
-			console.log(cn);
-			if( /\\bfolded\\b/.test( cn ) ) {				// if folded
-				this.className = cn.replace(/\\bfolded\\b/,'');
-				this.className += " unfold";
-			}else{
-				this.className = cn.replace(/\\bunfold\\b/g,''); 	// if unfold
-				this.className += " folded";
-			}
-			this.className = this.className.replace("  "," ")
-		})
-	})( i )
+var toggleFold = function(obj){						// toggle fold by toggle className
+	cn = obj.parentNode.className;
+	if( /\\bfolded\\b/.test( cn ) ) {				// if folded
+		cn = cn.replace(/\\bfolded\\b/,'') + ' unfold';
+	}else{
+		cn = cn.replace(/\\bunfold\\b/g,'') + ' folded'; 	// if unfold
+	}
+	obj.parentNode.className = cn.replace("  "," ")
 }
 	</script>
 """
@@ -73,13 +64,11 @@ renderDir=(realPath,files)->
         realPath+="/"
     html=[]
 	html.push "<ul>"
-	if realPath isnt "./"
-		html.push ''#"<li><span class='folder'></span><a href='../'>..</a></li>"
 	for file in files
 		_path = realPath + file
 		if fs.statSync(realPath+file).isDirectory()
 			_files = fs.readdirSync(_path)
-			html.push "<li class='subdir'><span class='folder'></span><a href='javascript:void(0)'>#{file}#{renderDir _path,_files}</a></li>"
+			html.push "<li class='subdir folded'><span class='folder'></span><a href='##{realPath}#{file}'onclick='toggleFold(this)'>#{file}#{renderDir _path,_files}</a></li>"
 		else
 			_split = file.split('.')
 			_extname = _split[_split.length-1]
@@ -92,7 +81,7 @@ renderDir=(realPath,files)->
 				when 'rar','zip','7z' then filetype = 'zipfile'
 				else filetype = 'defaulttype'
 
-			html.push "<li><span class='file ft_#{filetype}'></span><a href='./#{file}'>#{file}</a></li>"
+			html.push "<li><span class='file ft_#{filetype}'></span><a href='./#{realPath}#{file}'>#{file}</a></li>"
 	html.push "</ul>"
 	html.join ""
 
