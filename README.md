@@ -17,8 +17,4 @@ in the path which you want to be serve:
 - [node-migrator-bot](https://github.com/node-migrator-bot)
 
 #TODO
-
-1. Different types of files should own different icons  
-2. A browser extension for ``filelist`` display
-
-
+[issue](https://github.com/island205/f5/issues?milestone=1&state=open)

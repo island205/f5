@@ -154,5 +154,3 @@ createServer=(config)->
     console.log "f5 is on localhost:#{_port} now."
 exports.version="v0.0.3"
 exports.createServer=createServer
-
-
