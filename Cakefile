@@ -1,7 +1,7 @@
 {exec}=require "child_process"
 
 task "build","compile src to lib",->
-    child=exec "coffee -co lib/ src/",(e,s,se)->
+    child=exec "coffee -cwo lib/ src/",(e,s,se)->
         if e
             console.log e
             throw new Error "Error while compiling .coffee to .js"
