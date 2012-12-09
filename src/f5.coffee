@@ -43,25 +43,25 @@ var toggleFold = function(obj){                     // toggle fold by toggle cla
 """
 
 insertTempl = (file, templ)->
-    index=file.indexOf "</body>"
+    index = file.indexOf "</body>"
     if index is -1
         file += templ.join ''
     else
-        file = file[ 0...index ] + templ.join('')  + file[ index... ]
+        file = file[ 0...index ] + templ.join('')  + file[ index.. ]
 
 insertSocket = ( file )->
     insertTempl( file, [SOCKET_TEMPLATE] )
 insertStyle = ( file )->
     insertTempl( file, [STYLE_TEMPLATE] )
 
-res500=(err,res)->
+res500 = (err,res)->
     res.writeHead 500,{"Content-Type":"text/plain"}
     res.end err
 
-renderDir=(realPath,files)->
+renderDir = (realPath,files)->
     if realPath[realPath.length-1] isnt "/"
-        realPath+="/"
-    html=[]
+        realPath += "/"
+    html = []
     html.push "<ul>"
     for file in files
         _path = realPath + file
@@ -89,18 +89,14 @@ renderDir=(realPath,files)->
     html.push "</ul>"
     html.join ""
 
-createServer=(config)->
+createServer = (config)->
     _path = config.path
     _port = config.port
-    server=http.createServer (req,res)->
+    server = http.createServer (req,res)->
         pathname = url.parse(req.url).pathname
-        realPath = _path+pathname
-        #support chinese filename or path
-        realPath = decodeURIComponent realPath
+        realPath = decodeURIComponent _path+pathname
 
-        ###
-        path exist
-        ###
+        ### path exist ###
         fs.exists realPath,(exists)->
             if not exists
                 res.writeHead 404,{"Content-Type":"text/plain"}
@@ -116,11 +112,11 @@ createServer=(config)->
                         res.write insertTempl _htmltext, [STYLE_TEMPLATE,SOCKET_TEMPLATE]
                         res.end()
             else
-                ext=path.extname realPath
+                ext = path.extname realPath
                 if ext
-                    ext=ext.slice 1
+                    ext = ext[1..]
                 else
-                    ext="unknown"
+                    ext = "unknown"
                 res.setHeader "Content-Type",types[ext] or "text/plian"
 
                 fs.readFile realPath,"binary",(err,file)->
@@ -129,11 +125,11 @@ createServer=(config)->
                     else
                         res.writeHead 200,"Ok"
                         if ext is "html" or ext is "htm"
-                            file=insertSocket file
+                            file = insertSocket file
                         res.write file,"binary"
                         res.end()
-    _sockets=[]
-    _io={sockets}=io.listen server, "log level":0
+    _sockets = []
+    _io = {sockets} = io.listen server, "log level":0
     sockets.on "connection",(socket)->
         _sockets.push socket
     for change in ["fileCreated","fileModified","fileDeleted"]
@@ -143,5 +139,5 @@ createServer=(config)->
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
-exports.version="v0.0.3"
-exports.createServer=createServer
+exports.version = "v0.0.3"
+exports.createServer = createServer
