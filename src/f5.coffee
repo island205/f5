@@ -65,13 +65,18 @@ renderDir=(realPath,files)->
     html.push "<ul>"
     for file in files
         _path = realPath + file
-        if fs.statSync(realPath+file).isDirectory()
+        if fs.statSync(_path).isDirectory()
             _files = fs.readdirSync(_path)
-            html.push "<li class='subdir folded'><span class='folder'></span><a href='##{realPath}#{file}'onclick='toggleFold(this)'>#{file}#{renderDir _path,_files}</a></li>"
+            html.push \
+                    "<li class='subdir folded'>\
+                        <span class='folder'></span>\
+                        <a href='##{_path}'onclick='toggleFold(this)'>#{file}</a>\
+                        #{renderDir _path,_files}\
+                    </li>"
         else
             _split = file.split('.')
             _extname = _split[_split.length-1]
-            filetype=''
+            filetype = ''
             switch _extname
                 when 'css'  then filetype = 'css'
                 when 'html','htm' then filetype = 'html'
@@ -80,7 +85,7 @@ renderDir=(realPath,files)->
                 when 'rar','zip','7z' then filetype = 'zipfile'
                 else filetype = 'defaulttype'
 
-            html.push "<li><span class='file ft_#{filetype}'></span><a href='./#{realPath}#{file}'>#{file}</a></li>"
+            html.push "<li><span class='file ft_#{filetype}'></span><a href='./#{_path}'>#{file}</a></li>"
     html.push "</ul>"
     html.join ""
 
