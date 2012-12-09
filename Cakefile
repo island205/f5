@@ -1,7 +1,11 @@
 {exec}=require "child_process"
 
+_buildcmd = "coffee -cwo lib/ src/"
+_installcmd = ["sudo install -g","npm install -g"][0 <= process.env.os.toLowerCase().search 'nt']
+_testcmd = "node bin/f5"
+
 task "build","compile src to lib",->
-    child=exec "coffee -cwo lib/ src/",(e,s,se)->
+    child=exec _buildcmd ,(e,s,se)->
         if e
             console.log e
             throw new Error "Error while compiling .coffee to .js"
@@ -9,7 +13,7 @@ task "build","compile src to lib",->
         console.log data
 
 task "install","install f5 local",->
-    child=exec "sudo npm install -g",(err,s)->
+    child=exec _installcmd,(err,s)->
         if err
             console.log err
         else
@@ -18,7 +22,7 @@ task "install","install f5 local",->
         console.log data
 
 task "test", "run server for test", ->
-    child=exec "node bin/f5",(err,s)->
+    child=exec _testcmd,(err,s)->
         if err
             console.log err
         else
