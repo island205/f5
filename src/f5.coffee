@@ -35,8 +35,21 @@ insertSocket = ( file )->
 res500 = (err,res)->
     res.writeHead 500,{"Content-Type":"text/plain"}
     res.end err
+sortFiles = (realPath,files)->
+    _folders = []
+    _files   = []
+    if realPath[realPath.length-1] isnt "/"
+        realPath += "/"
+    for file in files
+        if fs.statSync(realPath+file).isDirectory()
+            _folders.push file
+        else
+            _files.push file
+    _folders.concat _files
 
 renderDir = (realPath,files)->
+    files = sortFiles(realPath,files)
+
     if realPath[realPath.length-1] isnt "/"
         realPath += "/"
     html = []
