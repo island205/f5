@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="utf-8" />
+    <title><%= title %></title>
+    <style type="text/css">
+      ul {
+        padding:5px 8px;
+        background:#F8F8F8;
+        margin:5px;
+        border: 1px solid #CACACA;
+        border-radius:3px;
+        box-shadow:0 0 5px #ccc;
+      }
+      ul li {
+        list-style-type:none;
+        border-bottom:1px solid #eee;
+        padding:3px;
+      }
+      ul li a {
+        color:#4183C4;
+        text-decoration:none
+      }
+      ul li a:hover {
+        text-decoration:underline
+      }
+      ul li span {
+        background-image:url(http://pic.yupoo.com/island205/CjJzay6Y/BaDLi.png);
+        display:inline-block;
+        width:20px;
+        height:14px;
+        margin:0 3px
+      }
+      ul li .folder {
+      }
+      ul li .file {
+        background-position-y:18px;
+      }
+      .subdir ul {
+        box-shadow:0 0 5px #ccc inset;
+        background: #fff;
+      }
+      .folded > ul {
+        display: none;
+      }
+      .unfold > ul {
+        display:block;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <%- _htmltext %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost');
+      socket.on('reload', function (data) {
+        window.location.reload();
+      });
+    </script>
+    <script>
+      var toggleFold = function (obj) { // toggle fold by toggle className
+        var cn = obj.parentNode.className;
+        if (/\bfolded\b/.test(cn)) { // if folded
+          cn = cn.replace(/\bfolded\b/, '') + ' unfold';
+        } else {
+          cn = cn.replace(/\bunfold\b/g, '') + ' folded'; // if unfold
+        }
+        obj.parentNode.className = cn.replace("  ", " ")
+      }
+    </script>
+  </body>
+
+</html>
+

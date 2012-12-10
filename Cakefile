@@ -20,20 +20,22 @@ task "build","compile src to lib",->
     child.stdout.on "data",(data)->
         console.log data
 
-task "install","install f5 local",->
-    child = exec _installcmd,(err,s)->
-        if err
-            console.log err
-        else
-            console.log s
-    child.stdout.on "data",(data)->
-        console.log data
-
 task "test", "run server for test", ->
+    invoke "build"
     child = exec _testcmd,(err,s)->
         if err
             console.log err
         else
             console.log s
      child.stdout.on "data",(data)->
+        console.log data
+
+task "install","install f5 local",->
+    invoke "build"
+    child = exec _installcmd,(err,s)->
+        if err
+            console.log err
+        else
+            console.log s
+    child.stdout.on "data",(data)->
         console.log data

@@ -1,10 +1,12 @@
 http    = require "http"
 io      = require "socket.io"
+ejs     = require "ejs"
 url     = require "url"
 fs      = require "fs"
 path    = require "path"
 {types} = require "./mime"
 watcher = require("watch-tree-maintained").watchTree "."
+
 SOCKET_TEMPLATE=\
 """
     <script src="/socket.io/socket.io.js"></script>
@@ -15,32 +17,10 @@ SOCKET_TEMPLATE=\
         });
 </script>
 """
-STYLE_TEMPLATE=\
-"""
-<style type="text/css">
-    ul{padding:5px 8px; background:#F8F8F8; margin:5px; border: 1px solid #CACACA; border-radius:3px; box-shadow:0 0 5px #ccc;}
-    ul li{list-style-type:none; border-bottom:1px solid #eee; padding:3px;}
-    ul li a{color:#4183C4; text-decoration:none}
-    ul li a:hover{text-decoration:underline}
-    ul li span{background-image:url(http://pic.yupoo.com/island205/CjJzay6Y/BaDLi.png); display:inline-block; width:20px; height:14px; margin:0 3px}
-    ul li .folder{}
-    ul li .file{ background-position-y:18px;}
-    .subdir ul{box-shadow:0 0 5px #ccc inset;background: #fff;}
-    .folded > ul{display: none;}
-    .unfold > ul{display:block;}
-</style>
-    <script language='javascript'>
-var toggleFold = function(obj){                     // toggle fold by toggle className
-    cn = obj.parentNode.className;
-    if( /\\bfolded\\b/.test( cn ) ) {               // if folded
-        cn = cn.replace(/\\bfolded\\b/,'') + ' unfold';
-    }else{
-        cn = cn.replace(/\\bunfold\\b/g,'') + ' folded';    // if unfold
-    }
-    obj.parentNode.className = cn.replace("  "," ")
-}
-    </script>
-"""
+
+getTempl = (file)->
+    file = "./html/" + file
+    return "" + fs.readFileSync(file)
 
 insertTempl = (file, templ)->
     index = file.indexOf "</body>"
@@ -51,8 +31,6 @@ insertTempl = (file, templ)->
 
 insertSocket = ( file )->
     insertTempl( file, [SOCKET_TEMPLATE] )
-insertStyle = ( file )->
-    insertTempl( file, [STYLE_TEMPLATE] )
 
 res500 = (err,res)->
     res.writeHead 500,{"Content-Type":"text/plain"}
@@ -109,7 +87,10 @@ createServer = (config)->
                     else
                         res.writeHead 200,{"Content-Type":types["html"]}
                         _htmltext = renderDir realPath,files
-                        res.write insertTempl _htmltext, [STYLE_TEMPLATE,SOCKET_TEMPLATE]
+                        res.write ejs.render(getTempl("files.ejs"), {
+                            _htmltext: _htmltext,
+                            title: realPath
+                        })
                         res.end()
             else
                 ext = path.extname realPath
