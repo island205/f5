@@ -71,7 +71,7 @@ renderDir = (realPath,files)->
             switch _extname
                 when 'css'  then filetype = 'css'
                 when 'html','htm' then filetype = 'html'
-                when 'js'   then filetype = 'javascript'
+                when 'js','coffee'   then filetype = 'javascript'
                 when 'jpg','jpeg','psd','gif','png' then filetype = 'image'
                 when 'rar','zip','7z' then filetype = 'zipfile'
                 else filetype = 'defaulttype'
