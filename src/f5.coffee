@@ -7,8 +7,7 @@ path    = require "path"
 {types} = require "./mime"
 watcher = require("watch-tree-maintained").watchTree "."
 
-SOCKET_TEMPLATE=\
-"""
+SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io.connect('http://localhost');
@@ -19,7 +18,7 @@ SOCKET_TEMPLATE=\
 """
 
 getTempl = (file)->
-    file = "./html/" + file
+    file = "./template/" + file
     return "" + fs.readFileSync(file)
 
 insertTempl = (file, templ)->
@@ -58,12 +57,11 @@ renderDir = (realPath,files)->
         _path = realPath + file
         if fs.statSync(_path).isDirectory()
             _files = fs.readdirSync(_path)
-            html.push \
-                    "<li class='subdir folded'>\
-                        <span class='folder'></span>\
-                        <a href='##{_path}'onclick='toggleFold(this)'>#{file}</a>\
-                        #{renderDir _path,_files}\
-                    </li>"
+            html.push ejs.render getTempl("dir.ejs"), {
+                _path:_path,
+                file:file,
+                subdir:renderDir _path, _files
+            }
         else
             _split = file.split('.')
             _extname = _split[_split.length-1]
@@ -76,7 +74,11 @@ renderDir = (realPath,files)->
                 when 'rar','zip','7z' then filetype = 'zipfile'
                 else filetype = 'defaulttype'
 
-            html.push "<li><span class='file ft_#{filetype}'></span><a href='./#{_path}'>#{file}</a></li>"
+            html.push ejs.render getTempl("file.ejs"), {
+                filetype:filetype,
+                _path:_path,
+                file:file
+            }
     html.push "</ul>"
     html.join ""
 
@@ -100,7 +102,7 @@ createServer = (config)->
                     else
                         res.writeHead 200,{"Content-Type":types["html"]}
                         _htmltext = renderDir realPath,files
-                        res.write ejs.render(getTempl("files.ejs"), {
+                        res.write ejs.render(getTempl("tree.ejs"), {
                             _htmltext: _htmltext,
                             title: realPath
                         })
