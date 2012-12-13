@@ -18,6 +18,16 @@
         border-bottom:1px solid #eee;
         padding:3px;
       }
+      .seleted_item{
+          background:#99f;
+      }
+      .seleted_item a{
+          color:white;
+      }
+      #urlContainer{
+          width:300px;
+          padding-left:5px;
+      }
       ul li a {
         color:#4183C4;
         text-decoration:none
@@ -56,6 +66,10 @@
 
   <body>
     <%- _htmltext %>
+    <div>
+        <input id="urlContainer" type="text" value="http://localhost:3000" />
+        <input type="button" value="I Can't Copy Yet" />
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io.connect('http://localhost');
@@ -73,8 +87,45 @@
         }
         obj.parentNode.className = cn.replace("  ", " ")
       }
-    </script>
+
+      //-----------------------------------------
+      var fileLi = document.querySelectorAll("ul li:not(.subdir)");
+      var seletedClassName = "seleted_item"
+      var fileNum = fileLi.length;
+
+      var selectHandleFunc = function(){
+          for(var i = 0;i < fileNum;i ++){
+              //console.log( fileLi[i]);
+              (function( index ){
+                  fileLi[index].addEventListener("click",function(){
+                      rmSelect()
+                      selectItem( fileLi[index] )
+                  });
+              })(i);
+          }
+      }
+      var selectItem = function( item ){
+          item.className = item.className + " " + seletedClassName;
+          var urlString = item.getElementsByTagName("a")[0].href;
+          setUrlContainer(urlString)
+      }
+
+      var rmSelect = function(){
+          for(var i = 0;i < fileNum;i ++){
+              (function(index){
+                  var cn = fileLi[index].className;
+                  fileLi[index].className = cn.replace(seletedClassName,"");
+              })(i);
+          }
+      }
+      var setUrlContainer = function( url ){
+          var base = "http://localhost:3000";
+          var container = document.getElementById("urlContainer");
+          container.value = url;
+          container.select();
+      }
+      selectHandleFunc();
+  </script>
   </body>
 
 </html>
-<!-- vim:fdm=marker-->
