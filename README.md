@@ -1,6 +1,9 @@
  light static sever which will reload page when there are changes in server side!
- 
+
 icons belong to @teambox [Free-file-icons](https://github.com/teambox/Free-file-icons)
+
+There is an [extra tool](https://github.com/UncleBill/crx4f5) works on chrome
+
 #install
     npm install -g f5
 
