@@ -59,8 +59,7 @@ renderDir = (realPath,files)->
             _files = fs.readdirSync(_path)
             html.push ejs.render getTempl("dir.ejs"), {
                 _path:_path,
-                file:file,
-                subdir:renderDir _path, _files
+                file:file
             }
         else
             _split = file.split('.')
@@ -135,5 +134,5 @@ createServer = (config)->
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
-exports.version = "v0.0.3"
+exports.version = "v0.0.4"
 exports.createServer = createServer
