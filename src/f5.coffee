@@ -18,7 +18,7 @@ SOCKET_TEMPLATE="""
 """
 
 getTempl = (file)->
-    file = "./template/" + file
+    file = __dirname + "/../template/" + file
     return "" + fs.readFileSync(file)
 
 insertTempl = (file, templ)->
@@ -134,5 +134,5 @@ createServer = (config)->
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
-exports.version = "v0.0.4"
+exports.version = "v0.0.5"
 exports.createServer = createServer
