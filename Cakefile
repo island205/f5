@@ -2,7 +2,7 @@
 
 _buildcmd   = "coffee -co lib/ src/"
 _watchcmd   = "coffee -cwo lib/ src/"
-_installcmd = if process.env.os.toLowerCase().search 'nt' then "npm install -g" or "sudo npm install -g"
+_installcmd = "npm install -g"
 _testcmd    = "node bin/f5"
 
 task "watch","auto compile src to lib",->
