@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/UncleBill/f5.png?branch=master)](https://travis-ci.org/UncleBill/f5)
 ![f5 logo](http://pic.yupoo.com/island205/CuRETY9c/small.jpg)
 
  light static sever which will reload page when there are changes in server side!
