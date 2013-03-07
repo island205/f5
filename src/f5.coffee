@@ -18,7 +18,9 @@ SOCKET_TEMPLATE="""
 """
 
 getTempl = (file)->
-    file = "./template/" + file
+    templDir = path.join(__dirname,'..','./template/')
+    #console.log(templDir)
+    file = templDir + file
     return "" + fs.readFileSync(file)
 
 insertTempl = (file, templ)->
