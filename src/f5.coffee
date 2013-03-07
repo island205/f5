@@ -56,6 +56,8 @@ renderDir = (realPath,files)->
     html = []
     html.push "<ul>"
     for file in files
+        if file[0] is '.'       # ingore dot files
+            continue
         _path = realPath + file
         if fs.statSync(_path).isDirectory()
             _files = fs.readdirSync(_path)
