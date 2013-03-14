@@ -5,7 +5,8 @@ url     = require "url"
 fs      = require "fs"
 path    = require "path"
 {types} = require "./mime"
-watcher = require("watch-tree-maintained").watchTree "."
+
+watcher = require("watch-tree-maintained").watchTree ".", {"ingore":/(^.*|.*~$)/}
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
