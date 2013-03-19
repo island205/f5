@@ -72,7 +72,7 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://localhost');
+      var socket = io.connect(location.hostname);
       socket.on('reload', function (data) {
         window.location.reload();
       });
@@ -119,7 +119,7 @@
           }
       }
       var setUrlContainer = function( url ){
-          var base = "http://localhost:3000";
+          var base = location.hostname;
           var container = document.getElementById("urlContainer");
           container.value = url;
           container.select();
