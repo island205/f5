@@ -11,7 +11,7 @@ watcher = require("watch-tree-maintained").watchTree ".", {"ingore":/(^.*|.*~$)/
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io.connect('http://localhost');
+        var socket = io.connect(location.hostname);
         socket.on('reload', function (data) {
             window.location.reload();
         });
