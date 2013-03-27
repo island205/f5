@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+  </head>
+
+  <body>
+    <%- _htmltext %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect(location.hostname);
+      socket.on('reload', function (data) {
+        window.location.reload();
+      });
+    </script>
+  </body>
+</html>
