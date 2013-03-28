@@ -4,7 +4,7 @@ ejs     = require "ejs"
 url     = require "url"
 fs      = require "fs"
 path    = require "path"
-{types} = require "./mime"
+{types} = ( require "express" ).mime
 
 watcher = require("watch-tree-maintained").watchTree ".", {"ingore":/(^.*|.*~$)/}
 
