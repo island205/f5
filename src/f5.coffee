@@ -10,17 +10,14 @@ watcher = require("watch-tree-maintained").watchTree ".", {"ignore":/(.*\/\.\w+|
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io.connect(location.hostname);
-        socket.on('reload', function (data) {
-            window.location.reload();
-        });
-</script>
+    <script src="{{ refleshScript }}"></script>
 """
+
+console.log( 'path'+ path.join('.') );
+SOCKET_TEMPLATE = SOCKET_TEMPLATE.replace "{{ refleshScript }}", '/reflesh.js'
 
 getTempl = (file)->
     templDir = path.join(__dirname,'..','./template/')
-    #console.log(templDir)
     file = templDir + file
     return "" + fs.readFileSync(file)
 
@@ -137,9 +134,9 @@ createServer = (config)->
     sockets.on "connection",(socket)->
         _sockets.push socket
     for change in ["fileCreated","fileModified","fileDeleted"]
-        watcher.on change,->
+        watcher.on change,( path )->
             for socket in _sockets
-                socket.emit "reload"
+                socket.emit "reload",path
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
