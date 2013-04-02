@@ -13,8 +13,8 @@ SOCKET_TEMPLATE="""
     <script src="{{ refleshScript }}"></script>
 """
 
-console.log( 'path'+ path.join('.') );
-SOCKET_TEMPLATE = SOCKET_TEMPLATE.replace "{{ refleshScript }}", '/reflesh.js'
+console.log( 'path'+ path.join('.') )
+SOCKET_TEMPLATE = SOCKET_TEMPLATE.replace "{{ refleshScript }}", '/template/reflesh.js'
 
 getTempl = (file)->
     templDir = path.join(__dirname,'..','./template/')
@@ -136,6 +136,7 @@ createServer = (config)->
     for change in ["fileCreated","fileModified","fileDeleted"]
         watcher.on change,( path )->
             for socket in _sockets
+                console.log path
                 socket.emit "reload",path
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."

@@ -35,15 +35,15 @@ var getFileAttchers = function(){
     }
 
     var resultsSize = results.length;
-    console.log( resultsSize )
-        for( var i = 0;i < resultsSize;++i ){
+    console.log( resultsSize );
+    for( var i = 0;i < resultsSize;++i ){
 
-            attchers[i] = {
-                element:results[i],
-                file:   results[i].href || results.src
-            }
-
+        attchers[i] = {
+            element:results[i],
+            file:   results[i].href || results.src
         }
+
+    }
     return attchers;
 }
 
