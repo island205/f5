@@ -2,21 +2,16 @@ var socket = io.connect(location.hostname);
 var pathname = location.pathname;   // a prefix
 socket.on('reload', function ($data) {
     pathname = decodeURIComponent( pathname );
-    console.log( pathname,$data.slice(1) );
-    if( pathname === $data.slice(1) ){       // $data prefix a dot("."), remove it
+    console.log( "log:$data",$data );
+    if( pathname === $data.slice(1) ){       // type of $data is ./foo/bar/file.html
         window.location.reload();
-    } else{
-        document.title = "!"+document.title;
-        attchers = getFileAttchers();
-        for(var i = 0; i < attchers.length; ++i){
-            var url = location.protocol + "//" + location.host + "/" + $data.slice(2);
-            console.log( "FULL",url );
-            //console.log( 'url:',url,'data:',$data,'file:',attchers[i].file);
-
-            if(url == attchers[i].file){
-                reloadTag( attchers[i] );
-                console.log( "match!!" );
-                break;
+    } else {
+        attachers = getFileAttchers();
+        for(var i = 0; i < attachers.length; ++i){
+            var url = location.protocol + "//" + location.host + $data.slice(1);
+            if(url == attachers[i].file) {
+                reloadTag( attachers[i] );
+                console.log( "log:file", attachers.file );
             }
         }
     }
@@ -24,9 +19,8 @@ socket.on('reload', function ($data) {
 
 var getFileAttchers = function(){
     var tags,
-        results = [],
         tagSize,
-        attchers = [];
+        attachers = [];
 
     if( document.querySelectorAll ){
         tags = document.querySelectorAll("*[href],*[src]");
@@ -39,27 +33,24 @@ var getFileAttchers = function(){
     for( var i = 0;i < tagSize; ++i ){
         var tag = tags[i];
         if( tag.src ){
-            results.push({
+            attachers.push({
                 element:tag,
                 file:  decodeURIComponent(tag.src)
             })
-        }
-        if( tag.href && tag.href !== localHref + "#" ){
-            results.push({
+        } else if( tag.href && tag.href !== localHref + "#" ){
+            attachers.push({
                 element:tag,
                 file:  decodeURIComponent(tag.href)
             });
         }
     }
 
-    var resultsSize = results.length;
-    attchers = results;
-    return attchers;
+    return attachers;
 }
 
 var reloadTag = function( attcher ){
     var element = attcher.element;
-    console.log( 'reloading !!!' )
+    console.log( 'reloading ...' );
     if( !!element.href ){
         var href = element.href;
         element.href = href;
@@ -72,7 +63,6 @@ var reloadTag = function( attcher ){
 
 ;(function(){
     setTimeout(function(){
-    document.title = "hh";
+        alert('reload script');
     },100);
 })();
-
