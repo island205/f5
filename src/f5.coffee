@@ -13,7 +13,6 @@ SOCKET_TEMPLATE="""
     <script src="{{ refleshScript }}"></script>
 """
 
-console.log( 'path'+ path.join('.') )
 SOCKET_TEMPLATE = SOCKET_TEMPLATE.replace "{{ refleshScript }}", '/template/reflesh.js'
 
 getTempl = (file)->
