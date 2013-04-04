@@ -1,12 +1,12 @@
 var socket = io.connect(location.hostname);
 var pathname = location.pathname;   // a prefix
+attachers = getFileAttachers();
 socket.on('reload', function ($data) {
     pathname = decodeURIComponent( pathname );
     console.log( "log:$data",$data );
     if( pathname === $data.slice(1) ){       // type of $data is ./foo/bar/file.html
         window.location.reload();
     } else {
-        attachers = getFileAttchers();
         for(var i = 0; i < attachers.length; ++i){
             var url = location.protocol + "//" + location.host + $data.slice(1);
             if(url == attachers[i].file) {
@@ -17,7 +17,7 @@ socket.on('reload', function ($data) {
     }
 });
 
-var getFileAttchers = function(){
+var getFileAttachers = function(){
     var tags,
         tagSize,
         attachers = [];
