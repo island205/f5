@@ -12,7 +12,7 @@
   "dependencies": {
     "watch-tree-maintained":"0.1.2",
     "socket.io":"0.9.1-1",
-    "express":"*",
+    "mime":"*",
     "ejs":"0.8.3"
   },
   "devDependencies": {},
