@@ -10,10 +10,8 @@ watcher = require("watch-tree-maintained").watchTree ".", {"ignore":/(.*\/\.\w+|
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
-    <script src="{{ refleshScript }}"></script>
+    <script src="/f5static/reflesh.js"></script>
 """
-
-SOCKET_TEMPLATE = SOCKET_TEMPLATE.replace "{{ refleshScript }}", '/template/reflesh.js'
 
 getTempl = (file)->
     templDir = path.join(__dirname,'..','./template/')
@@ -112,6 +110,10 @@ createServer = (config)->
                         })
                         res.end()
             else
+                # redirect to f5static file
+                if (realPath.split "/")[1] == 'f5static'
+                    realPath = path.join( __dirname, '..', realPath )
+
                 ext = path.extname realPath
                 if ext
                     ext = ext[1..]
@@ -133,12 +135,11 @@ createServer = (config)->
     sockets.on "connection",(socket)->
         _sockets.push socket
     for change in ["fileCreated","fileModified","fileDeleted"]
-        watcher.on change,( path )->
+        watcher.on change,( file )->
             for socket in _sockets
-                console.log path
-                socket.emit "reload",path
+                socket.emit "reload",file
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
-exports.version = "v0.0.4"
+exports.version = 'v0.0.6'
 exports.createServer = createServer
