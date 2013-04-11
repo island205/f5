@@ -88,8 +88,15 @@ createServer = (config)->
         pathname = url.parse(req.url).pathname
         realPath = decodeURIComponent _path+pathname
 
+        # redirect to f5static file
+        # console.log 'before split',realPath
+        if (realPath.split "/")[1] == 'f5static'
+            realPath = path.join( __dirname, '..', realPath )
+            #console.log 'static request',realPath
+
         ### path exist ###
         fs.exists realPath,(exists)->
+            #console.log( 'handle path', realPath )
             if not exists
                 res.writeHead 404,{"Content-Type":"text/html"}
                 res.write ejs.render(getTempl("404.ejs"),{
@@ -110,10 +117,6 @@ createServer = (config)->
                         })
                         res.end()
             else
-                # redirect to f5static file
-                if (realPath.split "/")[1] == 'f5static'
-                    realPath = path.join( __dirname, '..', realPath )
-
                 ext = path.extname realPath
                 if ext
                     ext = ext[1..]
