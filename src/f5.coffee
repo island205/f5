@@ -10,17 +10,11 @@ watcher = require("watch-tree-maintained").watchTree ".", {"ignore":/(.*\/\.\w+|
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io.connect(location.hostname);
-        socket.on('reload', function (data) {
-            window.location.reload();
-        });
-</script>
+    <script src="/f5static/reflesh.js"></script>
 """
 
 getTempl = (file)->
     templDir = path.join(__dirname,'..','./template/')
-    #console.log(templDir)
     file = templDir + file
     return "" + fs.readFileSync(file)
 
@@ -94,8 +88,15 @@ createServer = (config)->
         pathname = url.parse(req.url).pathname
         realPath = decodeURIComponent _path+pathname
 
+        # redirect to f5static file
+        # console.log 'before split',realPath
+        if (realPath.split "/")[1] == 'f5static'
+            realPath = path.join( __dirname, '..', realPath )
+            #console.log 'static request',realPath
+
         ### path exist ###
         fs.exists realPath,(exists)->
+            #console.log( 'handle path', realPath )
             if not exists
                 res.writeHead 404,{"Content-Type":"text/html"}
                 res.write ejs.render(getTempl("404.ejs"),{
@@ -137,11 +138,11 @@ createServer = (config)->
     sockets.on "connection",(socket)->
         _sockets.push socket
     for change in ["fileCreated","fileModified","fileDeleted"]
-        watcher.on change,->
+        watcher.on change,( file )->
             for socket in _sockets
-                socket.emit "reload"
+                socket.emit "reload",file
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
-exports.version = "v0.0.4"
+exports.version = 'v0.0.6'
 exports.createServer = createServer
