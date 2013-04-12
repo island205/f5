@@ -1,4 +1,3 @@
-
 ul {
     padding:5px 8px;
     background:#F8F8F8;
@@ -54,4 +53,16 @@ ul li .ft_image { background-position:-40px 0px; }/*imagefile*/
 }
 .unfold > ul {
     display:block;
+}
+#image_holder{
+    background:rgba(0,0,0,0.5);
+    padding:7px;
+    border:5px solid rgba(0,0,0,0.7);
+    border-radius:5px;
+    position:absolute;
+    -moz-box-shadow:    1px 1px 2px 1px #666;
+    -ms-box-shadow:     1px 1px 2px 1px #666;
+    -o-box-shadow:      1px 1px 2px 1px #666;
+    -webkit-box-shadow: 1px 1px 2px 1px #666;
+    box-shadow:         1px 1px 2px 1px #666;
 }
