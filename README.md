@@ -9,15 +9,28 @@ icons belong to @teambox [Free-file-icons](https://github.com/teambox/Free-file-
 There is an [extra tool](https://github.com/UncleBill/crx4f5) works on chrome
 
 #install
-    npm install -g f5
+    $ (sudo) npm install -g f5
+
+or if you want to test other fork
+
+    $ git clone <git-respon-url>
+    $ cd <git-clone-dir>
+    $ (sudo) npm install -g
 
 #how to use ?
-in the path which you want to be serve:
+- in the path which you want to be serve:
 
-    #run command
-    f5
-    #or assign port
-    f5 8080
+
+        #run command
+        $ f6
+        #or assign port
+        $ f5 8080
+
+- open your browser(any browser),and check out `http://localhost:${port you use,3000 default}`,launch your html page, `f5` will reload it every time you modify it
+
+- if modified file isn't html, `f5` won't reload the whole page but "reload" the attribute from all tags which attach the file
+
+- `f5` can works via **LAN** too!
 
 #Contributors
 
