@@ -13,7 +13,7 @@ There is an [extra tool](https://github.com/UncleBill/crx4f5) works on chrome
 
 or if you want to test other fork
 
-    $ git clone <git-respon-url>
+    $ git clone <git-respo-url>
     $ cd <git-clone-dir>
     $ (sudo) npm install -g
 
