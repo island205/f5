@@ -62,8 +62,8 @@ renderDir = (realPath,files)->
                 subdir : renderDir _path, _files
             }
         else
-            _split = file.split('.')
-            _extname = _split[_split.length-1]
+            _extname = path.extname( file )
+            _extname = _extname.length ? _extname.substr 1 : ""
             filetype = ''
             switch _extname
                 when 'css'  then filetype = 'css'
