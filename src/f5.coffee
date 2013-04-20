@@ -19,11 +19,21 @@ getTempl = (file)->
     return "" + fs.readFileSync(file)
 
 insertTempl = (file, templ)->
-    index = file.indexOf "</body>"
-    if index is -1
-        file += templ.join ''
-    else
-        file = file[ 0...index ] + templ.join('')  + file[ index.. ]
+    matchrx = /<\/\s*body\s*>/gi
+    matchs = file.match( matchrx )
+    matchs = matchs.concat [""]  # hack for for loop:
+                                 # make matchs' length same to splits'
+    splits = file.split( matchrx )
+    l = splits.length
+    _templ = []
+    got = ""
+    for ii in [0..( l-1 )]
+        if ii == l - 2      # final match is coming
+            _templ = templ
+        else
+            _templ = []
+        got += splits[ii] + _templ.join("") + matchs[ii]
+    got
 
 insertSocket = ( file )->
     insertTempl( file, [SOCKET_TEMPLATE] )
