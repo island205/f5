@@ -21,19 +21,13 @@ getTempl = (file)->
 insertTempl = (file, templ)->
     matchrx = /<\/\s*body\s*>/gi
     matchs = file.match( matchrx )
-    matchs = matchs.concat [""]  # hack for for loop:
-                                 # make matchs' length same to splits'
     splits = file.split( matchrx )
-    l = splits.length
-    _templ = []
-    got = ""
-    for ii in [0..( l-1 )]
-        if ii == l - 2      # final match is coming
-            _templ = templ
-        else
-            _templ = []
-        got += splits[ii] + _templ.join("") + matchs[ii]
-    got
+    if not splits.length
+        file += templ + ''
+    else
+        index = file.length - matchs[ matchs.length - 1 ].length - splits[ splits.length - 1 ].length
+        file = file[0...index] + templ.join("") + file[index...]
+
 
 insertSocket = ( file )->
     insertTempl( file, [SOCKET_TEMPLATE] )
