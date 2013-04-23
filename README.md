@@ -26,11 +26,27 @@ or if you want to test other fork
         #or assign port
         $ f5 8080
 
-- open your browser(any browser),and check out `http://localhost:${port you use,3000 default}`,launch your html page, `f5` will reload it every time you modify it
+- open your browser(any browser),and check out `http://localhost:${port you use,3000 default}`(for instance:http://localhost:3000),launch your html page, `f5` will reload it every time you modify it
 
 - if modified file isn't html, `f5` won't reload the whole page but "reload" the attribute from all tags which attach the file
 
-- `f5` can works via **LAN** too!
+
+#force of `f5` ( work via LAN! ):
+There is a short story:
+**Luke** are coding html on his Laptop,and **Master Yoda**,via **LAN**, can watch the page auto reloading with **any** browser on **any** OS when **Luke** modify the file.That's the force of `f5`.
+
+recommend shell script function:
+
+```sh
+function f55() { # run f5 background
+    nohup f5 $1 > /dev/null 2>&1 &
+    clear
+    echo f5 is runing
+}
+```
+
+Add this function to your SHELLRC file,restart the terminal,and run `f55`(or `f55 <port>`)
+( And executing `fg`,will call `f5` back in frontground. )
 
 #Contributors
 
