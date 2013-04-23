@@ -31,7 +31,7 @@ or if you want to test other fork
 - if modified file isn't html, `f5` won't reload the whole page but "reload" the attribute from all tags which attach the file
 
 
-#force of `f5` ( work via LAN! ):
+#force of `f5` ( working via LAN! ):
 There is a short story:
 **Luke** are coding html on his Laptop,and **Master Yoda**,via **LAN**, can watch the page auto reloading with **any** browser on **any** OS when **Luke** modify the file.That's the force of `f5`.
 
@@ -45,7 +45,7 @@ function f55() { # run f5 background
 }
 ```
 
-Add this function to your SHELLRC file,restart the terminal,and run `f55`(or `f55 <port>`)
+Add this function to your SHELLRC file,restart the terminal(or source the SHELLRC file) and run `f55`(or `f55 <port>`)
 ( And executing `fg`,will call `f5` back in frontground. )
 
 #Contributors
