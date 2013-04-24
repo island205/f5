@@ -67,7 +67,7 @@ renderDir = (realPath,files)->
             }
         else
             _extname = path.extname( file )
-            _extname = _extname.length ? _extname.substr 1 : ""
+            _extname = if _extname.length then _extname.substr 1 else ""
             filetype = ''
             switch _extname
                 when 'css'  then filetype = 'css'
@@ -150,3 +150,4 @@ createServer = (config)->
 
 exports.version = 'v0.0.6'
 exports.createServer = createServer
+# vim:set expandtab
