@@ -4,29 +4,30 @@ ejs     = require "ejs"
 url     = require "url"
 fs      = require "fs"
 path    = require "path"
-{types} = require "./mime"
-watcher = require("watch-tree-maintained").watchTree "."
+{types} = require "mime"
+
+watcher = require("watch-tree-maintained").watchTree ".", {"ignore":/(.*\/\.\w+|.*~$)/}
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io.connect('http://localhost');
-        socket.on('reload', function (data) {
-            window.location.reload();
-        });
-</script>
+    <script src="/f5static/reflesh.js"></script>
 """
 
 getTempl = (file)->
-    file = __dirname + "/../template/" + file
+    templDir = path.join(__dirname,'..','./template/')
+    file = templDir + file
     return "" + fs.readFileSync(file)
 
 insertTempl = (file, templ)->
-    index = file.indexOf "</body>"
-    if index is -1
-        file += templ.join ''
+    matchrx = /<\/\s*body\s*>/gi
+    matchs = file.match( matchrx )
+    splits = file.split( matchrx )
+    if not splits.length
+        file += templ + ''
     else
-        file = file[ 0...index ] + templ.join('')  + file[ index.. ]
+        index = file.length - matchs[ matchs.length - 1 ].length - splits[ splits.length - 1 ].length
+        file = file[0...index] + templ.join("") + file[index...]
+
 
 insertSocket = ( file )->
     insertTempl( file, [SOCKET_TEMPLATE] )
@@ -54,16 +55,19 @@ renderDir = (realPath,files)->
     html = []
     html.push "<ul>"
     for file in files
+        if file[0] is '.'       # ingore dot files
+            continue
         _path = realPath + file
         if fs.statSync(_path).isDirectory()
             _files = fs.readdirSync(_path)
             html.push ejs.render getTempl("dir.ejs"), {
-                _path:_path,
-                file:file
+                _path  : _path,
+                file   : file,
+                subdir : renderDir _path, _files
             }
         else
-            _split = file.split('.')
-            _extname = _split[_split.length-1]
+            _extname = path.extname( file )
+            _extname = if _extname.length then _extname.substr 1 else ""
             filetype = ''
             switch _extname
                 when 'css'  then filetype = 'css'
@@ -88,11 +92,21 @@ createServer = (config)->
         pathname = url.parse(req.url).pathname
         realPath = decodeURIComponent _path+pathname
 
+        # redirect to f5static file
+        # console.log 'before split',realPath
+        if (realPath.split "/")[1] == 'f5static'
+            realPath = path.join( __dirname, '..', realPath )
+            #console.log 'static request',realPath
+
         ### path exist ###
         fs.exists realPath,(exists)->
+            #console.log( 'handle path', realPath )
             if not exists
-                res.writeHead 404,{"Content-Type":"text/plain"}
-                res.write "404 Not Found"
+                res.writeHead 404,{"Content-Type":"text/html"}
+                res.write ejs.render(getTempl("404.ejs"),{
+                    _htmltext: "404 Not Found"
+                    title: "404 Not Found"
+                })
                 res.end()
             else if fs.statSync(realPath).isDirectory()
                 fs.readdir realPath,(err,files)->
@@ -128,11 +142,12 @@ createServer = (config)->
     sockets.on "connection",(socket)->
         _sockets.push socket
     for change in ["fileCreated","fileModified","fileDeleted"]
-        watcher.on change,->
+        watcher.on change,( file )->
             for socket in _sockets
-                socket.emit "reload"
+                socket.emit "reload",file
     server.listen _port
     console.log "f5 is on localhost:#{_port} now."
 
-exports.version = "v0.0.5"
+exports.version = 'v0.0.6'
 exports.createServer = createServer
+# vim:set expandtab
