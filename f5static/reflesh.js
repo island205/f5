@@ -3,8 +3,7 @@ var pathname = location.pathname;   // a prefix
 
 var getFileAttachers = function(){
     var tags,
-        tagSize,
-        attachers = [];
+        tagSize;
 
     if( document.querySelectorAll ){
         tags = document.querySelectorAll("*[href],*[src]");
@@ -13,14 +12,15 @@ var getFileAttachers = function(){
     }
 
     var localHref = location.href;
-    tagSize = tags.length;
+        tagSize = tags.length;
+    var attachers = new Array( tagSize );
     for( var i = 0;i < tagSize; ++i ){
         var tag = tags[i];
         if( tag.src ){
             attachers.push({
                 element:tag,
                 file:  decodeURIComponent(tag.src)
-            })
+            });
         } else if ( tag.href && tag.href !== localHref + "#" ){
             attachers.push({
                 element:tag,
