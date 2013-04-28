@@ -44,7 +44,7 @@ var setUrlContainer = function( url ){
     container.value = url;
     container.select();
 }
-selectHandleFunc();
+//selectHandleFunc();
 
 // image holder handling
 $("<div id='image_holder' />").appendTo($("body")).hide();
