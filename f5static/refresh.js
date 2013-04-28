@@ -17,18 +17,19 @@ var getFileAttachers = function(){
     for( var i = 0;i < tagSize; ++i ){
         var tag = tags[i];
         if( tag.src ){
-            attachers.push({
+            attachers[i] = {
                 element:tag,
                 file:  decodeURIComponent(tag.src)
-            });
+            }
         } else if ( tag.href && tag.href !== localHref + "#" ){
-            attachers.push({
+            attachers[i] = {
                 element:tag,
                 file:  decodeURIComponent(tag.href)
-            });
+            }
         }
     }
 
+    console.log( attachers );
     return attachers;
 }
 
@@ -48,7 +49,7 @@ var reloadTag = function( attcher ){
 attachers = getFileAttachers();
 socket.on('reload', function ($data) {
     pathname = decodeURIComponent( pathname );
-    //console.log( "log:$data",$data );
+    console.log( "log:$data",$data );
     if( pathname === $data.slice(1) ){       // type of $data is ./foo/bar/file.html
         window.location.reload();
     } else {
@@ -56,7 +57,7 @@ socket.on('reload', function ($data) {
             var url = location.protocol + "//" + location.host + $data.slice(1);
             if(url == attachers[i].file) {
                 reloadTag( attachers[i] );
-                //console.log( "log:file", attachers.file );
+                console.log( "log:file", attachers.file );
             }
         }
     }
