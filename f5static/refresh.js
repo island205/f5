@@ -13,7 +13,7 @@ var getFileAttachers = function(){
     }
 
     var localHref = location.href;
-    tagSize = tags.length;
+        tagSize = tags.length;
     for( var i = 0;i < tagSize; ++i ){
         var tag = tags[i];
         if( tag.src ){
@@ -34,7 +34,7 @@ var getFileAttachers = function(){
 
 var reloadTag = function( attcher ){
     var element = attcher.element;
-    console.log( 'reloading ...' );
+    //console.log( 'reloading ...' );
     if( !!element.href ){
         var href = element.href;
         element.href = href;
@@ -48,7 +48,7 @@ var reloadTag = function( attcher ){
 attachers = getFileAttachers();
 socket.on('reload', function ($data) {
     pathname = decodeURIComponent( pathname );
-    console.log( "log:$data",$data );
+    //console.log( "log:$data",$data );
     if( pathname === $data.slice(1) ){       // type of $data is ./foo/bar/file.html
         window.location.reload();
     } else {
@@ -56,7 +56,7 @@ socket.on('reload', function ($data) {
             var url = location.protocol + "//" + location.host + $data.slice(1);
             if(url == attachers[i].file) {
                 reloadTag( attachers[i] );
-                console.log( "log:file", attachers.file );
+                //console.log( "log:file", attachers.file );
             }
         }
     }
