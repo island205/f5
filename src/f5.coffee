@@ -10,7 +10,7 @@ watcher = require("watch-tree-maintained").watchTree ".", {"ignore":/(.*\/\.\w+|
 
 SOCKET_TEMPLATE="""
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/f5static/reflesh.js"></script>
+    <script src="/f5static/refresh.js"></script>
 """
 
 getTempl = (file)->
