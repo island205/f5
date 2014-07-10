@@ -19,7 +19,7 @@ or if you want to test other fork
 
 
         #run command
-        $ f6
+        $ f5
         #or assign port
         $ f5 8080
 
